@@ -1,0 +1,53 @@
+name: Check & Build
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  check-releases:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Check for new releases
+        run: |
+          python check_releases.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run packagebuild.sh
+        run: |
+          chmod +x packagebuild.sh
+          ./packagebuild.sh
+
+      - name: Zip output directory
+        run: |
+          zip -r output.zip output
+
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          tag_name: release-${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          body: |
+            Automated release. Description and title still have to be updated.
+          draft: false
+          prerelease: false
+
+      - name: Upload zip files as assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-assets
+          path: output.zip
