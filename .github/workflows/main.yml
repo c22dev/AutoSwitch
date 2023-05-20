@@ -31,6 +31,12 @@ jobs:
           chmod +x packagebuild.sh
           ./packagebuild.sh
 
+      - name: Upload zip files as assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-assets
+          path: output.zip
+          
       - name: Create release
         uses: actions/create-release@v1
         id: create_release
@@ -43,10 +49,12 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-      - name: Upload zip files as assets
-        uses: actions/upload-artifact@v2
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: release-assets
-          path: output.zip
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: output.zip
+          asset_name: Output.zip
+          asset_content_type: file/zip
