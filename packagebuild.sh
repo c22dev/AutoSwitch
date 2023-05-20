@@ -103,6 +103,9 @@ echo "# Block Nintendo Servers
 cd ../
 cp -r SDOUTPUT SD_Out_Tools
 mv SDOUTPUT SD_Out
+cd SD_Out
+for dir in */; do zip -r SD.zip "$dir"; done
+cd ../
 # Tools Output
 cd SD_Out_Tools
 
@@ -124,5 +127,8 @@ TAG_NAME=$(echo "$RELEASE_INFO" | grep -o '"tag_name": *"[^"]*"' | grep -o '[^"]
 DOWNLOAD_URL=$(echo "$RELEASE_INFO" | grep -o "browser_download_url\": *\"[^\"]*" | grep "DBI.nro" | grep -o '[^"]*$')
 curl -LO "${DOWNLOAD_URL}"
 mv DBI.nro switch/DBI.nro
+for dir in */; do zip -r SD_T.zip "$dir"; done
 cd ../
 for dir in */; do zip -r output.zip "$dir"; done
+mv SD_Out_Tools/SD_T.zip SD_T.zip
+mv SD_Out/SD.zip SD.zip
