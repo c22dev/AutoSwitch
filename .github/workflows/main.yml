@@ -41,6 +41,9 @@ jobs:
             This is an automated release triggered by a new version.
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Upload zip files as assets
         uses: actions/upload-artifact@v2
