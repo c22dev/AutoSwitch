@@ -1,8 +1,11 @@
-name: Check & Build
+name: Check for New Releases & Build
 
 on:
   schedule:
-    - cron: "*/1 * * * *"
+    - cron: "*/5 * * * *"
+  push:
+    branches:
+      - main  # Replace with your desired branch
 
 jobs:
   check-releases:
@@ -20,20 +23,13 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Check for new releases
-        run: |
-          python check_releases.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run packagebuild.sh
-        run: |
-          chmod +x packagebuild.sh
-          ./packagebuild.sh
+      - name: Run Python script
+        run: python check_releases.py
 
       - name: Zip output directory
         run: |
-          zip -r output.zip output
+          chmod +x packagebuild.sh
+          ./packagebuild.sh
 
       - name: Create release
         uses: actions/create-release@v1
@@ -42,7 +38,7 @@ jobs:
           tag_name: release-${{ github.sha }}
           release_name: Release ${{ github.sha }}
           body: |
-            Automated release. Description and title still have to be updated.
+            This is an automated release triggered by a new version.
           draft: false
           prerelease: false
 
