@@ -5,7 +5,7 @@ on:
     - cron: "*/5 * * * *"
   push:
     branches:
-      - main  # Replace with your desired branch
+      - main
 
 jobs:
   check-releases:
@@ -30,12 +30,6 @@ jobs:
         run: |
           chmod +x packagebuild.sh
           ./packagebuild.sh
-
-      - name: Upload zip files as assets
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-assets
-          path: output.zip
           
       - name: Create release
         uses: actions/create-release@v1
@@ -44,17 +38,39 @@ jobs:
           tag_name: release-${{ github.sha }}
           release_name: Release ${{ github.sha }}
           body: |
-            This is an automated release triggered by a new version.
+            This is an automated release, and description of new changes isn't available for now.
+            --
+            
+            What to choose ?
+            
+            SD_Out.zip : SD content without homebrews (bare minimum)
+            SD_Out_Tools.zip : SD content with homebrews
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: upload linux artifact
+      - name: Upload SD Out Without Tools
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: output.zip
-          asset_name: Output.zip
+          asset_path: SD.zip
+          asset_name: SD_Out.zip
           asset_content_type: file/zip
+          
+      - name: Upload SD Out With Tools
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: SD_T.zip
+          asset_name: SD_Out_Tools.zip
+          asset_content_type: file/zip
+
+      - name: Upload zip files as assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-assets
+          path: output.zip
