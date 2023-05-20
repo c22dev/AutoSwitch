@@ -124,3 +124,4 @@ TAG_NAME=$(echo "$RELEASE_INFO" | grep -o '"tag_name": *"[^"]*"' | grep -o '[^"]
 DOWNLOAD_URL=$(echo "$RELEASE_INFO" | grep -o "browser_download_url\": *\"[^\"]*" | grep "DBI.nro" | grep -o '[^"]*$')
 curl -LO "${DOWNLOAD_URL}"
 mv DBI.nro switch/DBI.nro
+for dir in */; do zip -r output.zip "$dir"; done
