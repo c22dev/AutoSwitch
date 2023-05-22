@@ -2,10 +2,7 @@ name: Check for New Releases & Build
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
-  push:
-    branches:
-      - main
+    - cron:  '30 5,17 * * *'
 
 jobs:
   check-releases:
