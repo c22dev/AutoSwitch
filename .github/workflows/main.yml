@@ -3,6 +3,9 @@ name: Check for New Releases & Build
 on:
   schedule:
     - cron:  '30 5,17 * * *'
+  push:
+    branches:
+      - '*'
 
 jobs:
   check-releases:
@@ -20,10 +23,10 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run Python script
+      - name: Run Python script for updates
         run: python check_releases.py
 
-      - name: Zip output directory
+      - name: Prepeare package
         run: |
           chmod +x packagebuild.sh
           ./packagebuild.sh
