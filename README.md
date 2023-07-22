@@ -1,3 +1,4 @@
+# This project is archived. Download and use the .sh script on your own computer.
 # AutoSwitch
 An automatic Switch CFW SD builder using Rentry Guide instructions.
 
